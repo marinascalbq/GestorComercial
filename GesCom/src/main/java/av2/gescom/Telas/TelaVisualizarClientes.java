@@ -6,16 +6,11 @@ package av2.gescom.Telas;
 
 import av2.gescom.Cliente;
 import av2.gescom.ClienteRepository;
-import java.awt.BorderLayout;
+import javax.swing.*;
+import java.awt.*;
+import java.text.SimpleDateFormat;
 import java.util.List;
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 
-/**
- *
- * @author Marina
- */
 public class TelaVisualizarClientes {
     private ClienteRepository clienteRepository;
 
@@ -24,32 +19,34 @@ public class TelaVisualizarClientes {
     }
 
     public void mostrarTela() {
-    // Cria uma nova tela para visualizar os clientes
-    JFrame telaVisualizacao = new JFrame("Clientes Cadastrados");
-    telaVisualizacao.setSize(600, 400);
-    telaVisualizacao.setLayout(new BorderLayout());
+        JFrame telaVisualizacao = new JFrame("Clientes Cadastrados");
+        telaVisualizacao.setSize(600, 400);
+        telaVisualizacao.setLayout(new BorderLayout());
 
-    // Cria um JTextArea para exibir os clientes
-    JTextArea areaTexto = new JTextArea();
-    areaTexto.setEditable(false);
-    JScrollPane scrollPane = new JScrollPane(areaTexto);
+        JTextArea areaTexto = new JTextArea();
+        areaTexto.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(areaTexto);
 
-    // Obtém a lista de clientes do repositório
-    List<Cliente> clientes = clienteRepository.obterTodosClientes();
+        // Obtém a lista de clientes do repositório
+        List<Cliente> clientes = clienteRepository.obterTodosClientes();
 
-    // Preenche o JTextArea com os dados dos clientes
-    for (Cliente cliente : clientes) {
-        areaTexto.append("Nome: " + cliente.getNome() + "\n");
-        areaTexto.append("CPF: " + cliente.getCpf() + "\n");
-        areaTexto.append("Login: " + cliente.getLogin() + "\n");
-        areaTexto.append("Última Compra: " + cliente.getUltimaCompra() + "\n");
-        areaTexto.append("-------------------------\n");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
+        // Preenche o JTextArea com os dados dos clientes
+        for (Cliente cliente : clientes) {
+            areaTexto.append("Nome: " + cliente.getNome() + "\n");
+            areaTexto.append("CPF: " + cliente.getCpf() + "\n");
+            areaTexto.append("Login: " + cliente.getLogin() + "\n");
+
+            // Formata a data antes de exibi-la
+            String dataFormatada = dateFormat.format(cliente.getUltimaCompra());
+            areaTexto.append("Última Compra: " + dataFormatada + "\n");
+
+            areaTexto.append("-------------------------\n");
+        }
+
+        telaVisualizacao.add(scrollPane, BorderLayout.CENTER);
+        telaVisualizacao.setVisible(true);
     }
-
-    // Adiciona o JTextArea ao painel
-    telaVisualizacao.add(scrollPane, BorderLayout.CENTER);
-
-    // Exibe a tela de visualização
-    telaVisualizacao.setVisible(true);
-}}
+}
 

@@ -4,7 +4,6 @@
  */
 package av2.gescom;
 
-import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,116 +12,42 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 /**
  *
  * @author Marina
  */
-    public class ClienteRepository {
-        private List<Cliente> listaClientes; 
-        
-        public List<Cliente> obterTodosClientes() {
-        return new ArrayList<>(listaClientes);
+public class ClienteRepository {
+
+    private List<Cliente> listaClientes;
+
+    public ClienteRepository() throws ParseException {
+        listaClientes = new ArrayList<>(); // Inicializa a lista no construtor
+        carregarClientesDoCSV(); // Carrega os clientes do CSV ao criar o repositório
     }
 
-    private void criarTelaCadastroCliente(String nome, String cpf, String login, String senha, String ultimaCompra) {
-        JFrame telaCadastro = new JFrame("Cadastrar Cliente");
-        telaCadastro.setSize(400, 300);
-        telaCadastro.setLayout(new GridLayout(6, 2));
-
-        // Campos de entrada para os atributos do cliente
-        JLabel labelNome = new JLabel("Nome:");
-        JTextField campoNome = new JTextField();
-        campoNome.setText(nome);
-
-        JLabel labelCpf = new JLabel("CPF:");
-        JTextField campoCpf = new JTextField();
-        campoCpf.setText(cpf);
-
-        JLabel labelLogin = new JLabel("Login:");
-        JTextField campoLogin = new JTextField();
-        campoLogin.setText(login);
-
-        JLabel labelSenha = new JLabel("Senha:");
-        JPasswordField campoSenha = new JPasswordField();
-        campoSenha.setText(senha);
-
-        JLabel labelUltimaCompra = new JLabel("Última Compra:");
-        JTextField campoUltimaCompra = new JTextField();
-        campoUltimaCompra.setText(ultimaCompra);
-
-        JButton botaoCadastrar = new JButton("Cadastrar");
-        botaoCadastrar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Captura os dados dos campos de entrada
-                String novoNome = campoNome.getText();
-                String novoCpf = campoCpf.getText();
-                String novoLogin = campoLogin.getText();
-                String novaSenha = new String(campoSenha.getPassword());
-                String novaUltimaCompra = campoUltimaCompra.getText();
-
-                // Cria um novo cliente
-                Cliente novoCliente = new Cliente(novoNome, novoCpf, novoLogin, novaSenha, novaUltimaCompra);
-
-                // Adiciona o cliente à lista de clientes
-                listaClientes.add(novoCliente);
-
-                // Chama o método para salvar a lista de clientes no CSV
-                salvarClientesNoCSV();
-
-                // Fecha a tela de cadastro
-                telaCadastro.dispose();
-            }
-        });
-
-        // Adiciona os componentes à tela
-        telaCadastro.add(labelNome);
-        telaCadastro.add(campoNome);
-        telaCadastro.add(labelCpf);
-        telaCadastro.add(campoCpf);
-        telaCadastro.add(labelLogin);
-        telaCadastro.add(campoLogin);
-        telaCadastro.add(labelSenha);
-        telaCadastro.add(campoSenha);
-        telaCadastro.add(labelUltimaCompra);
-        telaCadastro.add(campoUltimaCompra);
-        telaCadastro.add(botaoCadastrar);
-
-        // Exibe a tela de cadastro
-        telaCadastro.setVisible(true);
+    public List<Cliente> obterTodosClientes() {
+        return new ArrayList<>(listaClientes); // Retorna uma cópia da lista de clientes
     }
 
     public void cadastrarCliente(Cliente novoCliente) {
-    criarTelaCadastroCliente("", "", "", "", ""); // Abre a tela de cadastro com campos vazios
-    
+        listaClientes.add(novoCliente); // Adiciona o cliente à lista de clientes
+        salvarClientesNoCSV(); // Salva a lista de clientes no arquivo CSV
     }
 
-    private void salvarClientesNoCSV() {
-    try {
-        BufferedWriter writer = new BufferedWriter(new FileWriter("clientes.csv", true)); // O parâmetro "true" indica que o arquivo deve ser aberto no modo de adição
-        Cliente novoCliente = listaClientes.get(listaClientes.size() - 1); // Pega o último cliente adicionado
-        
-        writer.write(novoCliente.getNome() + "," + novoCliente.getCpf() + "," + novoCliente.getLogin()
-                + "," + novoCliente.getSenha() + "," + novoCliente.getUltimaCompra());
-        writer.newLine();
-        
-        writer.close();
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-}
-
-    public Cliente encontrarClientePorCPF(String cpf) {
+    public Cliente encontrarClientePorCPF(String cpf) throws ParseException {
     cpf = cpf.trim().replaceAll("[^0-9]", "");
     Cliente clienteEncontrado = null; // Inicializa como null
 
@@ -134,15 +59,18 @@ import javax.swing.JTextField;
             String[] dadosCliente = linha.split(",");
             String cpfCliente = dadosCliente[1].trim().replaceAll("[^0-9]", "");
 
-            if (cpfCliente.equals(cpf)) {
-                String nome = dadosCliente[0];
-                String login = dadosCliente[2];
-                String senha = dadosCliente[3];
-                String ultimaCompra = dadosCliente[4];
-                
-                clienteEncontrado = new Cliente(nome, cpf, login, senha, ultimaCompra);
-                break; // Encontrou o cliente, não precisa continuar
-            }
+           if (cpfCliente.equals(cpf)) {
+                    String nome = dadosCliente[0];
+                    String login = dadosCliente[2];
+                    String senha = dadosCliente[3];
+                    String dataVendaStr = dadosCliente[4];
+
+                    SimpleDateFormat dateFormat =  new SimpleDateFormat("dd.MM.yyyy");
+                    Date dataVenda = dateFormat.parse(dataVendaStr);
+
+                    clienteEncontrado = new Cliente(nome, cpf, login, senha,dataVenda);
+                    break; // Encontrou o cliente, não precisa continuar
+                }
         }
 
         reader.close(); // Fecha o arquivo após a busca
@@ -153,57 +81,8 @@ import javax.swing.JTextField;
 
     return clienteEncontrado;
 }
-
-    private void atualizarCliente() {
-    JFrame atualizarClienteFrame = new JFrame("Atualizar Cliente");
-    atualizarClienteFrame.setSize(400, 200);
-    atualizarClienteFrame.setLayout(new GridLayout(3, 2));
-
-    JLabel cpfLabel = new JLabel("CPF do Cliente:");
-    JTextField cpfField = new JTextField();
-
-    JButton atualizarButton = new JButton("Atualizar");
-    atualizarButton.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            String cpf = cpfField.getText();
-
-            // Encontra o cliente na lista pelo CPF
-            Cliente cliente = encontrarClientePorCPF(cpf);
-
-            if (cliente != null) {
-                // Salva a lista de clientes atualizada no arquivo CSV
-                salvarClientesNoCSV();
-
-                // Abre a mesma tela de cadastro com os dados do cliente
-                criarTelaCadastroCliente(cliente.getNome(), cliente.getCpf(), cliente.getLogin(), cliente.getSenha(), cliente.getUltimaCompra());
-
-                // Fecha a janela após atualizar
-                atualizarClienteFrame.dispose();
-            } else {
-                JOptionPane.showMessageDialog(null, "Cliente não encontrado.");
-            }
-        }
-    });
-
-    atualizarClienteFrame.add(cpfLabel);
-    atualizarClienteFrame.add(cpfField);
-    atualizarClienteFrame.add(atualizarButton);
-
-    atualizarClienteFrame.setVisible(true);
-}
     
-    private void visualizarCliente() {
-        // Cria uma nova tela para visualizar os clientes
-        JFrame telaVisualizacao = new JFrame("Clientes Cadastrados");
-        telaVisualizacao.setSize(600, 400);
-        telaVisualizacao.setLayout(new BorderLayout());
-
-        // Cria um JTextArea para exibir os clientes
-        JTextArea areaTexto = new JTextArea();
-        areaTexto.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(areaTexto);
-
-        // Lê os dados dos clientes do arquivo CSV e preenche o JTextArea
+    private void carregarClientesDoCSV() throws ParseException {
         try {
             BufferedReader reader = new BufferedReader(new FileReader("clientes.csv"));
             String linha;
@@ -213,24 +92,83 @@ import javax.swing.JTextField;
                 String cpf = dadosCliente[1];
                 String login = dadosCliente[2];
                 String senha = dadosCliente[3];
-                String ultimaCompra = dadosCliente[4];
+                String dataVendaStr = dadosCliente[4];
 
-                areaTexto.append("Nome: " + nome + "\n");
-                areaTexto.append("CPF: " + cpf + "\n");
-                areaTexto.append("Login: " + login + "\n");
-                areaTexto.append("Última Compra: " + ultimaCompra + "\n");
-                areaTexto.append("-------------------------\n");
+                    SimpleDateFormat dateFormat  =  new SimpleDateFormat("dd.MM.yyyy");
+                    Date dataVenda = dateFormat.parse(dataVendaStr);
+                    
+                Cliente cliente = new Cliente(nome, cpf, login, senha,dataVenda);
+                listaClientes.add(cliente);
             }
             reader.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        // Adiciona o JTextArea ao painel
-        telaVisualizacao.add(scrollPane, BorderLayout.CENTER);
-
-        // Exibe a tela de visualização
-        telaVisualizacao.setVisible(true);
     }
+
+    public void atualizarCliente(Cliente cliente)  {
+    JFrame atualizarClienteFrame = new JFrame("Atualizar Cliente");
+    atualizarClienteFrame.setSize(400, 200);
+    atualizarClienteFrame.setLayout(new GridLayout(3, 2));
+
+    JLabel cpfLabel = new JLabel("CPF do Cliente:");
+    JTextField cpfField = new JTextField(cliente.getCpf()); // Preenche o campo CPF com o CPF do cliente
+
+    JButton atualizarButton = new JButton("Atualizar");
+    atualizarButton.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            String cpf = cpfField.getText();
+
+            // Encontra o cliente na lista pelo CPF
+            Cliente clienteEncontrado;
+            try {
+                clienteEncontrado = encontrarClientePorCPF(cpf);
+           
+                    if (clienteEncontrado != null) {
+                        // Atualiza os dados do cliente
+                        cliente.setNome(clienteEncontrado.getNome());
+                        cliente.setCpf(clienteEncontrado.getCpf());
+                        cliente.setLogin(clienteEncontrado.getLogin());
+                        cliente.setSenha(clienteEncontrado.getSenha());
+
+
+                        // Salva a lista de clientes atualizada no arquivo CSV
+                        salvarClientesNoCSV();
+
+                        // Fecha a janela após atualizar
+                        atualizarClienteFrame.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Cliente não encontrado.");
+                    }
+
+                    } catch (ParseException ex) {
+                        Logger.getLogger(ClienteRepository.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+        }
+    });
+
+    atualizarClienteFrame.add(cpfLabel);
+    atualizarClienteFrame.add(cpfField);
+    atualizarClienteFrame.add(atualizarButton);
+
+    atualizarClienteFrame.setVisible(true);
+}
+
+    public void salvarClientesNoCSV() {
+    try {
+        BufferedWriter writer = new BufferedWriter(new FileWriter("clientes.csv")); // Cria o arquivo ou sobrescreve o existente
+        SimpleDateFormat dateFormat =  new SimpleDateFormat("dd.MM.yyyy");
+        
+        for (Cliente cliente : listaClientes) {
+            String dataVendaStr = dateFormat.format(cliente.getUltimaCompra());
+            writer.write(cliente.getNome() + "," + cliente.getCpf() + "," + cliente.getLogin()
+                    + "," + cliente.getSenha() + "," + dataVendaStr);
+            writer.newLine();
+        }
+        writer.close();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+}
 }
 

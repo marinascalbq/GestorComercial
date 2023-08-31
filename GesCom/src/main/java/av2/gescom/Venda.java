@@ -4,9 +4,6 @@
  */
 package av2.gescom;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 
 /**
@@ -17,11 +14,32 @@ public class Venda {
     private Cliente cliente;
     private List<Produto> produtos;
     private String dataVenda;
+    private int quantidade;
 
-    // Construtor
-     public Venda(Cliente cliente, List<Produto> produtos, String dataVenda) {
+    public Venda(Cliente cliente, List<Produto> produtosVenda,int quantidade, String dataVenda) {
         this.cliente = cliente;
-        this.produtos = produtos;
+        this.produtos = produtosVenda;
+        this.dataVenda = dataVenda;
+        this.quantidade = quantidade;
+    }
+
+    public int getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public void setProdutos(List<Produto> produtosVenda) {
+        this.produtos = produtosVenda;
+    }
+
+    public void setDataVenda(String dataVenda) {
         this.dataVenda = dataVenda;
     }
 
@@ -31,13 +49,6 @@ public class Venda {
             valorTotal += produto.getPreco();
         }
         return valorTotal;
-    }
-
-    // Método para retirar a quantidade dos produtos do estoque
-    public void retirarDoEstoque() {
-        for (Produto produto : produtos) {
-            produto.retirarDoEstoque();
-        }
     }
     
         public List<Produto> getProdutos() {
@@ -52,27 +63,4 @@ public class Venda {
         return dataVenda;
     }
             
-    // Método para registrar a venda
-    public void registrarVenda() {
-        try {
-            FileWriter fileWriter = new FileWriter("vendas.csv", true); // Abrir arquivo CSV para adicionar registros
-            PrintWriter printWriter = new PrintWriter(fileWriter);
-
-            // Montar a linha do registro da venda (exemplo: cpf_cliente;produto1;produto2;produto3;data)
-            StringBuilder linha = new StringBuilder();
-            linha.append(cliente.getCpf()); // Substitua pelo método que obtém o CPF do cliente
-            for (Produto produto : produtos) {
-                linha.append(";").append(produto.getNome()); // Substitua pelo método que obtém o nome do produto
-            }
-            linha.append(";").append(dataVenda);
-
-            printWriter.println(linha.toString());
-
-            printWriter.close();
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
-}
 }

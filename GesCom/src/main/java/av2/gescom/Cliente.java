@@ -4,24 +4,38 @@
  */
 package av2.gescom;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  *
  * @author Marina
  */
 public class Cliente extends Pessoa {
-    private String ultimaCompra;
+    private Date ultimaCompra;
 
-    public Cliente(String nome, String cpf, String login, String senha, String ultimaCompra) {
+    public Cliente(String nome, String cpf, String login, String senha, Date ultimaCompra) {
         super(nome, cpf, login, senha);
         this.ultimaCompra = ultimaCompra;
     }
-
-    public String getUltimaCompra() {
+   
+    public Date getUltimaCompra() {
         return ultimaCompra;
     }
+    
+     public String getUltimaCompraFormatted() {
+         SimpleDateFormat dateFormat =  new SimpleDateFormat("EEE dd MMM yyyy HH:mm:ss z");
+        return dateFormat.format(ultimaCompra);
+    }
 
-    public void setUltimaCompra(String ultimaCompra) {
-        this.ultimaCompra = ultimaCompra;
+    public void setUltimaCompraFromString(Date ultimaCompraStr) {
+        SimpleDateFormat dateFormat =  new SimpleDateFormat("EEE dd MMM yyyy HH:mm:ss z");
+        try {
+            ultimaCompra = dateFormat.parse(getUltimaCompraFormatted());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
  
 }

@@ -4,20 +4,30 @@
  */
 package av2.gescom;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  *
  * @author Marina
  */
 public class Estoque {
+    private List<Produto> produtos;
     private int estoqueMinimo;
-    private Map<Integer, ProdutoEstoque> produtosEmEstoque;
+
 
     public Estoque(int estoqueMinimo) {
+        this.produtos = new ArrayList<>();
         this.estoqueMinimo = estoqueMinimo;
-        this.produtosEmEstoque = new HashMap<>();
+    }
+
+    public List<Produto> getProdutos() {
+        return produtos;
+    }
+
+    public void setProdutos(List<Produto> produtos) {
+        this.produtos = produtos;
     }
 
     public int getEstoqueMinimo() {
@@ -28,31 +38,29 @@ public class Estoque {
         this.estoqueMinimo = estoqueMinimo;
     }
 
-    public void adicionarProduto(Produto produto, int quantidade) {
-        if (produtosEmEstoque.containsKey(produto.getIdProduto())) {
-            ProdutoEstoque produtoEstoque = produtosEmEstoque.get(produto.getIdProduto());
-            produtoEstoque.aumentarQuantidade(quantidade);
-        } else {
-            ProdutoEstoque produtoEstoque = new ProdutoEstoque(produto, quantidade);
-            produtosEmEstoque.put(produto.getIdProduto(), produtoEstoque);
-        }
+    public void adicionarProduto(Produto produto) {
+        produtos.add(produto);
     }
 
-    public void retirarDoEstoque(int idProduto, int quantidade) {
-        if (produtosEmEstoque.containsKey(idProduto)) {
-            ProdutoEstoque produtoEstoque = produtosEmEstoque.get(idProduto);
-            produtoEstoque.diminuirQuantidade(quantidade);
-        } else {
-            // Lidar com o caso em que o produto não está no estoque
-        }
+    public void removerProduto(Produto produto) {
+        produtos.remove(produto);
     }
 
-    public boolean verificarQuantidadeBaixa(int idProduto) {
-        if (produtosEmEstoque.containsKey(idProduto)) {
-            ProdutoEstoque produtoEstoque = produtosEmEstoque.get(idProduto);
-            return produtoEstoque.getQuantidade() < estoqueMinimo;
+    public boolean estoqueAbaixoMinimo() {
+        for (Produto produto : produtos) {
+            if (produto.getQuantidade() < estoqueMinimo) {
+                return true;
+            }
         }
         return false;
     }
-
+    
+    public void retirarDoEstoque(int idProduto, int quantidade) {
+        for (Produto produto : produtos) {
+            if (produto.getIdProduto() == idProduto) {
+                produto.retirarDoEstoque(quantidade);
+                break;
+            }
+        }
+}
 }

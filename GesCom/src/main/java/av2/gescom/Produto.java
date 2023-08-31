@@ -15,17 +15,13 @@ public class Produto {
     private String nome;
     private double preco;
     private int quantidade;
-    private List<Produto> listaProdutos;
+    
 
     public Produto(int idProduto, String nome, double preco, int quantidade) {
         this.idProduto = idProduto;
         this.nome = nome;
         this.preco = preco;
         this.quantidade = quantidade;
-    }
-
-    Produto(String idProduto, String nomeProduto) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     public int getIdProduto() {
@@ -58,10 +54,6 @@ public class Produto {
 
     public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
-    }
-
-    public void retirarDoEstoque() {
-
     }
     
     public void retirarDoEstoque(int quantidade) {

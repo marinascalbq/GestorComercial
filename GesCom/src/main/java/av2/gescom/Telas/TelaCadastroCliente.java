@@ -14,6 +14,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TelaCadastroCliente {
     private ClienteRepository clienteRepository;
@@ -49,13 +54,22 @@ public class TelaCadastroCliente {
                 String cpf = campoCpf.getText();
                 String login = campoLogin.getText();
                 String senha = new String(campoSenha.getPassword());
-                String ultimaCompra = campoUltimaCompra.getText();
-
+                String dataVendaStr = campoUltimaCompra.getText();
+                
+                 SimpleDateFormat dateFormat  =  new SimpleDateFormat("dd.MM.yyyy");
+                 Date dataVenda = null; // Verificar se vai dar erro
+                try {
+                    dataVenda = dateFormat.parse(dataVendaStr);
+                } catch (ParseException ex) {
+                    Logger.getLogger(TelaCadastroCliente.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(null, "Formato de data inválido. Use o formato dd.MM.yyyy.", "Erro", JOptionPane.ERROR_MESSAGE);
+                return; // Evitar que o restante do código seja executado
+                }
+                 
                 // Criar um novo cliente
-                Cliente novoCliente = new Cliente(nome, cpf, login, senha, ultimaCompra);
-
+                Cliente novoCliente = new Cliente(nome, cpf, login, senha, dataVenda);
                 // Adicionar o cliente ao repositório
-                clienteRepository.cadastrarCliente(novoCliente);
+                clienteRepository.cadastrarCliente(novoCliente);    
 
                 // Fechar a tela de cadastro
                 telaCadastro.dispose();
