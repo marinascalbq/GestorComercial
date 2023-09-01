@@ -17,7 +17,6 @@ import av2.gescom.Telas.TelaMostrarComprasEfetuadas;
 import av2.gescom.Telas.TelaMostrarEstoque;
 import av2.gescom.Telas.TelaRegistrarProdutos;
 import av2.gescom.Telas.TelaVisualizarClientes;
-import av2.gescom.Cliente;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -32,6 +31,8 @@ public class MenuGUI extends JFrame {
     private ProdutoRepository produtoRepository;
     private VendaRepository vendaRepository;
     private Estoque estoque;
+    
+    private java.util.List<Produto> listaProdutos;
 
     private static MenuGUI instance;
 
@@ -59,7 +60,7 @@ public class MenuGUI extends JFrame {
     TelaEfetuarCompra telaEfetuarCompra = new TelaEfetuarCompra(clienteRepository, produtoRepository, vendaRepository, estoque);
     TelaMostrarComprasEfetuadas telaMostrarComprasEfetuadas = new TelaMostrarComprasEfetuadas(vendaRepository);
     TelaMostrarEstoque telaMostrarEstoque = new TelaMostrarEstoque(estoque);
-    TelaRegistrarProdutos telaRegistrarProdutos = new TelaRegistrarProdutos(produtoRepository);
+    TelaRegistrarProdutos telaRegistrarProdutos = new TelaRegistrarProdutos(produtoRepository,listaProdutos);
     TelaVisualizarClientes telaVisualizarClientes = new TelaVisualizarClientes(clienteRepository);
     TelaAtualizarClientes telaAtualizarClientes = new TelaAtualizarClientes(clienteRepository);
 

@@ -89,7 +89,8 @@ public class TelaEfetuarCompra {
                 int quantidade = Integer.parseInt(quantidadeField.getText());
                 
                 // Encontrar o cliente
-                Cliente cliente = encontrarClientePorCPF(cpf);
+                Cliente cliente = encontrarClientePorCPF(cpfField.getText());
+
                 if (cliente == null) {
                     JOptionPane.showMessageDialog(compraFrame, "Cliente não encontrado!");
                     return;
@@ -103,6 +104,10 @@ public class TelaEfetuarCompra {
                 }
                 
                 // Verificar a quantidade em estoque
+                if (quantidade > estoque.getQuantidade(produto)) {
+                    JOptionPane.showMessageDialog(compraFrame, "Quantidade em estoque insuficiente!");
+                    return;
+                }
                 if (quantidade > produto.getQuantidade()) {
                     JOptionPane.showMessageDialog(compraFrame, "Quantidade em estoque insuficiente!");
                     return;
@@ -139,13 +144,13 @@ public class TelaEfetuarCompra {
                         + "Quantidade: " + quantidade + "\n"
                         + "Data da compra: " + formattedDate;
                 
-                // Exibe os dados da compra no campo de texto
-                dadosCompraTextArea.setText(dadosCompra);
-                
+
                 // Adiciona o botão "Fechar" ao painel
                 panel.remove(comprarButton);
-                JOptionPane.showMessageDialog(compraFrame, "Atenção: A quantidade após a compra ficará abaixo de 5!");
-                panel.add(fecharButton);
+                JOptionPane.showMessageDialog(compraFrame, "Venda Registra com sucesso");
+                JOptionPane.showMessageDialog(compraFrame, dadosCompra);
+                 // Fechar a janela de registro de produtos
+                compraFrame.dispose();
                 
                 
             } catch (ParseException ex) {

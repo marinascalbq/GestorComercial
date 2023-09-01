@@ -63,4 +63,8 @@ public class Estoque {
             }
         }
 }
+
+    public int getQuantidade(Produto produto) {
+        return produto.getQuantidade();
+}
 }

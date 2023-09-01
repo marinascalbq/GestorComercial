@@ -4,7 +4,6 @@
  */
 package av2.gescom;
 
-import java.util.List;
 
 /**
  *

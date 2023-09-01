@@ -27,10 +27,6 @@ public class TelaAtualizarClientes {
         this.clienteRepository = clienteRepository;
     }
 
-    public Cliente getClienteParaAtualizar() {
-        return clienteParaAtualizar;
-    }
-
     public void setClienteParaAtualizar(Cliente clienteParaAtualizar) {
         this.clienteParaAtualizar = clienteParaAtualizar;
     }
@@ -38,7 +34,7 @@ public class TelaAtualizarClientes {
     public TelaAtualizarClientes(ClienteRepository clienteRepository) {
         this.clienteRepository = clienteRepository;
     }
-    
+
     public void mostrarTela(Cliente cliente) {
         this.clienteParaAtualizar = cliente;
 
@@ -64,7 +60,7 @@ public class TelaAtualizarClientes {
                 clienteParaAtualizar.setLogin(novoLogin);
                 clienteParaAtualizar.setSenha(novaSenha);
 
-                clienteRepository.atualizarCliente(clienteParaAtualizar);
+                clienteRepository.atualizarDadosDoCliente(clienteParaAtualizar);
                 clienteRepository.salvarClientesNoCSV();
 
                 telaAtualizacaoCliente.dispose();

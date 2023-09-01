@@ -9,16 +9,20 @@ package av2.gescom;
  * @author Marina
  */
 class ProdutoEstoque {
-    private Produto produto;
+    private Produto produtoEst;
+
+    public ProdutoEstoque(Produto produtoEst) {
+        this.produtoEst = produtoEst;
+    }
     private int quantidade;
 
     public ProdutoEstoque(Produto produto, int quantidade) {
-        this.produto = produto;
+        this.produtoEst = produto;
         this.quantidade = quantidade;
     }
 
     public Produto getProduto() {
-        return produto;
+        return produtoEst;
     }
 
     public int getQuantidade() {
