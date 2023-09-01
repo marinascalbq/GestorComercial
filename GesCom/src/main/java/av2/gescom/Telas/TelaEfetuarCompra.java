@@ -13,7 +13,6 @@ import av2.gescom.ClienteRepository;
 import av2.gescom.Estoque;
 import av2.gescom.Produto;
 import av2.gescom.ProdutoRepository;
-import av2.gescom.Venda;
 import av2.gescom.VendaRepository;
 import javax.swing.*;
 import java.awt.*;
@@ -69,8 +68,8 @@ public class TelaEfetuarCompra {
         JButton fecharButton = new JButton("Concluído");
 
         JTextArea dadosCompraTextArea = new JTextArea();
-        dadosCompraTextArea.setEditable(false); // Impede edição do campo
-        dadosCompraTextArea.setLineWrap(true); // Quebra de linha automática
+        dadosCompraTextArea.setEditable(false); 
+        dadosCompraTextArea.setLineWrap(true); 
         JScrollPane scrollPane = new JScrollPane(dadosCompraTextArea);
 
         panel.add(cpfLabel);
@@ -88,7 +87,6 @@ public class TelaEfetuarCompra {
                 int idProduto = Integer.parseInt(produtoField.getText());
                 int quantidade = Integer.parseInt(quantidadeField.getText());
                 
-                // Encontrar o cliente
                 Cliente cliente = encontrarClientePorCPF(cpfField.getText());
 
                 if (cliente == null) {
@@ -96,14 +94,12 @@ public class TelaEfetuarCompra {
                     return;
                 }
                 
-                // Encontrar o produto
                 Produto produto = encontrarProdutoPorId(idProduto);
                 if (produto == null) {
                     JOptionPane.showMessageDialog(compraFrame, "Produto não encontrado!");
                     return;
                 }
                 
-                // Verificar a quantidade em estoque
                 if (quantidade > estoque.getQuantidade(produto)) {
                     JOptionPane.showMessageDialog(compraFrame, "Quantidade em estoque insuficiente!");
                     return;
@@ -113,43 +109,34 @@ public class TelaEfetuarCompra {
                     return;
                 }
                 
-                // Verificar se a quantidade após a compra será menor que 5
                 if (produto.getQuantidade() - quantidade < 5) {
                     JOptionPane.showMessageDialog(compraFrame, "Atenção: A quantidade após a compra ficará abaixo de 5!");
                 }
-                
-                // Criar a lista de produtos da venda
+
                 List<Produto> produtosVenda = new ArrayList<>();
                 produtosVenda.add(produto);
-                
-                // Criar uma nova venda
+
                 String dataVenda = LocalDate.now().toString();
                 
-                // Registrar a venda no CSV
+
                 vendaRepository.registrarVenda(cliente, produtosVenda,quantidade, dataVenda);
                 
-                // Retirar a quantidade do produto do estoque
+
                 estoque.retirarDoEstoque(idProduto, quantidade);
                 
-                // Atualizar a quantidade no arquivo produtos.csv
                 atualizarQuantidadeNoCSV(idProduto, quantidade);
                 
-                // Formatação da data
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 String formattedDate = LocalDateTime.now().format(formatter);
                 
-                // Monta os dados da compra para exibição
                 String dadosCompra = "Cliente: " + cliente.getNome() + "\n"
                         + "Produto: " + produto.getNome() + "\n"
                         + "Quantidade: " + quantidade + "\n"
                         + "Data da compra: " + formattedDate;
                 
-
-                // Adiciona o botão "Fechar" ao painel
                 panel.remove(comprarButton);
                 JOptionPane.showMessageDialog(compraFrame, "Venda Registra com sucesso");
                 JOptionPane.showMessageDialog(compraFrame, dadosCompra);
-                 // Fechar a janela de registro de produtos
                 compraFrame.dispose();
                 
                 
@@ -158,7 +145,7 @@ public class TelaEfetuarCompra {
             }
             fecharButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                compraFrame.dispose(); // Fecha a janela
+                compraFrame.dispose(); 
     }
 });
         }
@@ -166,11 +153,11 @@ public class TelaEfetuarCompra {
 
         fecharButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                compraFrame.dispose(); // Fecha a janela
+                compraFrame.dispose(); 
             }
         });
 
-        panel.add(scrollPane); // Adiciona a área de texto ao painel
+        panel.add(scrollPane); 
         compraFrame.add(panel);
         compraFrame.setVisible(true);
     }
@@ -189,7 +176,7 @@ public class TelaEfetuarCompra {
                     double preco = Double.parseDouble(dadosProduto[2]);
                     int quantidade = Integer.parseInt(dadosProduto[3]);
 
-                    reader.close(); // Fecha o leitor antes de retornar
+                    reader.close(); 
                     return new Produto(idProduto, nomeProduto, preco, quantidade);
                 }
             }
@@ -199,7 +186,7 @@ public class TelaEfetuarCompra {
             e.printStackTrace();
         }
 
-        return null; // Se não encontrar o produto com o idProduto fornecido
+        return null;
     }
 
     public void atualizarQuantidadeNoCSV(int idProduto, int quantidadeVendida) {

@@ -24,18 +24,4 @@ public class Cliente extends Pessoa {
         return ultimaCompra;
     }
     
-     public String getUltimaCompraFormatted() {
-         SimpleDateFormat dateFormat =  new SimpleDateFormat("EEE dd MMM yyyy HH:mm:ss z");
-        return dateFormat.format(ultimaCompra);
-    }
-
-    public void setUltimaCompraFromString(Date ultimaCompraStr) {
-        SimpleDateFormat dateFormat =  new SimpleDateFormat("EEE dd MMM yyyy HH:mm:ss z");
-        try {
-            ultimaCompra = dateFormat.parse(getUltimaCompraFormatted());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
- 
 }

@@ -38,16 +38,14 @@ public class TelaMostrarComprasEfetuadas {
             String linha;
 
             while ((linha = reader.readLine()) != null) {
-                String[] dadosCompra = linha.split(";"); // Usar ponto e vírgula como separador
+                String[] dadosCompra = linha.split(";"); 
 
                 if (dadosCompra.length >= 3 && !dadosCompra[0].equals("null")) {
                     String cpfCliente = dadosCompra[0];
                     String nomeProduto = dadosCompra[1];
                     String quantidade = dadosCompra[2];
 
-                    
-                     // Formatação da data
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                     String formattedDate = LocalDateTime.now().format(formatter);
 
                     textArea.append("\n");

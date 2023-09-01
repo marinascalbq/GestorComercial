@@ -24,3 +24,5 @@ public class GesCom {
         );
     }
 }
+
+//criar validação para não poder usar o mesmo CPF no cadastro de novos cliente e produtos

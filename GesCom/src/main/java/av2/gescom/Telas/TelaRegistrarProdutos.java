@@ -56,13 +56,10 @@ public class TelaRegistrarProdutos {
                        
                 Produto novoProduto = new Produto(idProduto, nomeProduto, preco, quantidade);
 
-                // Adicionar o novo produto à lista de produtos
                 produtoRepository.atualizarQuantidadeNoCSV(idProduto, quantidade);
 
-                // Salvar o novo produto no arquivo CSV
                 produtoRepository.salvarProdutosNoCSV(novoProduto);
 
-                // Fechar a janela de registro de produtos
                 registrarProdutosFrame.dispose();
                     }
                 });

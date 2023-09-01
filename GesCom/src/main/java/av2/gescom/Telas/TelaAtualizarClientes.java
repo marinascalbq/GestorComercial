@@ -15,9 +15,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+
 public class TelaAtualizarClientes {
     private ClienteRepository clienteRepository;
-    private Cliente clienteParaAtualizar;
+    public Cliente clienteParaAtualizar;
 
     public ClienteRepository getClienteRepository() {
         return clienteRepository;
@@ -35,33 +36,26 @@ public class TelaAtualizarClientes {
         this.clienteRepository = clienteRepository;
     }
 
-    public void mostrarTela(Cliente cliente) {
-        this.clienteParaAtualizar = cliente;
+    public void mostrarTela(Cliente clienteEncontrado) {
+        this.clienteParaAtualizar = clienteEncontrado;
 
         JFrame telaAtualizacaoCliente = new JFrame("Atualizar Dados do Cliente");
         telaAtualizacaoCliente.setSize(400, 300);
         telaAtualizacaoCliente.setLayout(new GridLayout(6, 2));
 
-        JTextField campoNome = new JTextField(cliente.getNome());
-        JTextField campoCpf = new JTextField(cliente.getCpf());
-        JTextField campoLogin = new JTextField(cliente.getLogin());
-        JPasswordField campoSenha = new JPasswordField(cliente.getSenha());
+        JTextField campoNome = new JTextField(clienteEncontrado.getNome());
+        JTextField campoCpf = new JTextField(clienteEncontrado.getCpf());
+        JTextField campoLogin = new JTextField(clienteEncontrado.getLogin());
+        JPasswordField campoSenha = new JPasswordField(clienteEncontrado.getSenha());
 
         JButton atualizarButton = new JButton("Atualizar");
         atualizarButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String novoNome = campoNome.getText();
-                String novoCpf = campoCpf.getText();
-                String novoLogin = campoLogin.getText();
-                String novaSenha = new String(campoSenha.getPassword());
-
-                clienteParaAtualizar.setNome(novoNome);
-                clienteParaAtualizar.setCpf(novoCpf);
-                clienteParaAtualizar.setLogin(novoLogin);
-                clienteParaAtualizar.setSenha(novaSenha);
-
-                clienteRepository.atualizarDadosDoCliente(clienteParaAtualizar);
-                clienteRepository.salvarClientesNoCSV();
+                
+                clienteRepository.atualizarDadosDoCliente(clienteParaAtualizar, campoNome.getText(), campoCpf.getText(),
+                        campoLogin.getText(), new String(campoSenha.getPassword()));
+                
+             
 
                 telaAtualizacaoCliente.dispose();
             }
