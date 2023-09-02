@@ -27,18 +27,15 @@ public class TelaVisualizarClientes {
         areaTexto.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(areaTexto);
 
-        // Obtém a lista de clientes do repositório
         List<Cliente> clientes = clienteRepository.obterTodosClientes();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
-        // Preenche o JTextArea com os dados dos clientes
         for (Cliente cliente : clientes) {
             areaTexto.append("Nome: " + cliente.getNome() + "\n");
             areaTexto.append("CPF: " + cliente.getCpf() + "\n");
             areaTexto.append("Login: " + cliente.getLogin() + "\n");
 
-            // Formata a data antes de exibi-la
             String dataFormatada = dateFormat.format(cliente.getUltimaCompra());
             areaTexto.append("Última Compra: " + dataFormatada + "\n");
 

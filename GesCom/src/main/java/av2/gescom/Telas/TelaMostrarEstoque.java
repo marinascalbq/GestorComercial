@@ -43,14 +43,13 @@ public class TelaMostrarEstoque {
 
                 boolean abaixoEstoqueMinimo = false;
 
-                // Verifica se está abaixo do estoque mínimo utilizando a classe Estoque
                 if (estoque != null && quantidade < estoque.getEstoqueMinimo()) {
                     abaixoEstoqueMinimo = true;
                 }
 
                 String sinalizacao = abaixoEstoqueMinimo ? " (Abaixo do Estoque Mínimo)" : "";
 
-                // Adiciona as informações ao JTextArea
+
                 textArea.append("ID: " + idProduto + "\n");
                 textArea.append("Nome: " + nomeProduto + "\n");
                 textArea.append("Preço: " + preco + "\n");

@@ -242,7 +242,7 @@ public class TelaEfetuarCompra {
                     
                                    
                     SimpleDateFormat dateFormat  =  new SimpleDateFormat("dd.MM.yyyy");
-                    Date dataVenda = null; // Verificar se vai dar erro
+                    Date dataVenda = null;
                    try {
                        dataVenda = dateFormat.parse(ultimaCompra);
                    } catch (ParseException ex) {
@@ -252,11 +252,11 @@ public class TelaEfetuarCompra {
                    }
 
                     clienteEncontrado = new Cliente(nome, cpf, login, senha, dataVenda);
-                    break; // Encontrou o cliente, não precisa continuar
+                    break;
                 }
             }
 
-            reader.close(); // Fecha o arquivo após a busca
+            reader.close();
 
         } catch (IOException e) {
             e.printStackTrace();

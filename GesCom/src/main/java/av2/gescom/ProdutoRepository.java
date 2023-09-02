@@ -27,7 +27,7 @@ import java.util.List;
     
     public void salvarProdutosNoCSV(Produto novoProduto) {
     try {
-        BufferedWriter writer = new BufferedWriter(new FileWriter("produtos.csv", true)); // Adiciona o parâmetro "true" para modo de adição
+        BufferedWriter writer = new BufferedWriter(new FileWriter("produtos.csv", true)); 
         
         writer.write(novoProduto.getIdProduto() + "," + novoProduto.getNome() + ","
                 + novoProduto.getPreco() + "," + novoProduto.getQuantidade());
@@ -39,6 +39,28 @@ import java.util.List;
     }
 }
 
+    public boolean idProdutoExiste(int idProduto) {
+    try {
+        BufferedReader reader = new BufferedReader(new FileReader("produtos.csv"));
+        String linha;
+
+        while ((linha = reader.readLine()) != null) {
+            String[] dadosProduto = linha.split(",");
+            int idProdutoCSV = Integer.parseInt(dadosProduto[0].trim());
+
+            if (idProdutoCSV == idProduto) {
+                reader.close();
+                return true;
+            }
+        }
+        
+        reader.close();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+
+    return false; 
+}
 
 
     public Produto encontrarProdutoPorId(int idProduto) {
@@ -47,7 +69,7 @@ import java.util.List;
                 return produto;
             }
         }
-        return null; // Retorna null se não encontrar o produto com o ID especificado
+        return null; 
     }
 
     public List<Produto> obterProdutosPorId(int... ids) {
@@ -63,39 +85,36 @@ import java.util.List;
         return produtos;
     }
     
-    public void atualizarQuantidadeNoCSV(int idProduto, int novaQuantidade) {
+    public void atualizarQuantidadeNoCSV(int idProduto, int quantidadeASomar) {
     try {
-        BufferedReader reader = new BufferedReader(new FileReader("produtos.csv"));
-        List<String> linhas = new ArrayList<>();
-        String linha;
+        File arquivoCSV = new File("produtos.csv");
+        File arquivoTemp = new File("produtos_temp.csv");
 
+        BufferedReader reader = new BufferedReader(new FileReader(arquivoCSV));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(arquivoTemp));
+
+        String linha;
         while ((linha = reader.readLine()) != null) {
             String[] dadosProduto = linha.split(",");
             int idProdutoCSV = Integer.parseInt(dadosProduto[0].trim());
 
             if (idProdutoCSV == idProduto) {
+                int quantidadeAtual = Integer.parseInt(dadosProduto[3].trim());
+                int novaQuantidade = quantidadeAtual + quantidadeASomar;
                 dadosProduto[3] = Integer.toString(novaQuantidade);
-                linha = String.join(",", dadosProduto);
             }
 
-            linhas.add(linha);
+            writer.write(String.join(",", dadosProduto));
+            writer.newLine();
         }
 
         reader.close();
-
-        BufferedWriter writer = new BufferedWriter(new FileWriter("produtos_temp.csv")); // Novo arquivo temporário
-        for (String linhaAtualizada : linhas) {
-            writer.write(linhaAtualizada);
-            writer.newLine();
-        }
         writer.close();
 
-        // Renomear o arquivo temporário para substituir o arquivo original
-        File originalFile = new File("produtos.csv");
-        File tempFile = new File("produtos_temp.csv");
-        tempFile.renameTo(originalFile);
+        arquivoCSV.delete();
+        arquivoTemp.renameTo(arquivoCSV);
     } catch (IOException e) {
         e.printStackTrace();
     }
 }
-    }
+}

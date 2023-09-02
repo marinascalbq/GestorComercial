@@ -4,8 +4,6 @@
  */
 package av2.gescom;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**

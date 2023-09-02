@@ -48,20 +48,23 @@ public class TelaRegistrarProdutos {
         JButton cadastrarProdutoButton = new JButton("Cadastrar Produto");
         cadastrarProdutoButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int idProduto = Integer.parseInt(campoCodigo.getText());
-                String nomeProduto = campoNomeProduto.getText();
-                double preco = Double.parseDouble(campoPreco.getText());
-                int quantidade = Integer.parseInt(campoQuantidade.getText());
+            int idProduto = Integer.parseInt(campoCodigo.getText());
+            int quantidade = Integer.parseInt(campoQuantidade.getText());
 
-                       
-                Produto novoProduto = new Produto(idProduto, nomeProduto, preco, quantidade);
+            if (produtoRepository.idProdutoExiste(idProduto)) {
 
                 produtoRepository.atualizarQuantidadeNoCSV(idProduto, quantidade);
+            } else {
+                String nomeProduto = campoNomeProduto.getText();
+                double preco = Double.parseDouble(campoPreco.getText());
 
+                Produto novoProduto = new Produto(idProduto, nomeProduto, preco, quantidade);
                 produtoRepository.salvarProdutosNoCSV(novoProduto);
+            }
 
-                registrarProdutosFrame.dispose();
-                    }
+            registrarProdutosFrame.dispose();
+        }
+
                 });
 
         JPanel panel = new JPanel();

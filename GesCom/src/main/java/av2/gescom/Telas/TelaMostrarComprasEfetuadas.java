@@ -5,16 +5,11 @@
 package av2.gescom.Telas;
 
 
-import av2.gescom.ProdutoRepository;
 import av2.gescom.VendaRepository;
-import av2.gescom.Venda;
 import javax.swing.*;
-import java.awt.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import av2.gescom.Produto;
 import java.io.BufferedReader;
 import java.io.FileReader;
 

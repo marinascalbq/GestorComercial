@@ -4,6 +4,7 @@
  */
 package av2.gescom;
 
+import av2.gescom.Telas.TelaCadastroCliente;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -15,12 +16,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 public class ClienteRepository {
     private List<Cliente> listaClientes;
+    private TelaCadastroCliente telaCadastroCliente;
+        
 
     public ClienteRepository() throws ParseException {
-        listaClientes = new ArrayList<>();
+        listaClientes = obterTodosClientes();
     }
 
     public List<Cliente> obterTodosClientes() {
@@ -49,15 +53,76 @@ public class ClienteRepository {
             reader.close();
         } catch (IOException | ParseException e) {
             e.printStackTrace();
-            return null;
         }
 
         return clientes;
     }
 
+    public boolean cpfExiste(String cpf) {
+        cpf = cpf.trim().replaceAll("[^0-9]", "");
+
+        for (Cliente cliente : listaClientes) {
+            if (cliente.getCpf().equals(cpf)) {
+                return true; 
+            }
+        }
+
+        return false;
+    }
+
+    public boolean loginExiste(String login) {
+        for (Cliente cliente : listaClientes) {
+            if (cliente.getLogin().equalsIgnoreCase(login)) {
+                return true; 
+            }
+        }
+        return false; 
+    }
+
+    public boolean cpfValido(String cpf) {
+        return cpf.matches("\\d{11}");
+    }
+
     public void cadastrarCliente(Cliente novoCliente) {
-        listaClientes.add(novoCliente);
-        salvarClientesNoCSV(listaClientes);
+        String cpf = novoCliente.getCpf();
+        String login = novoCliente.getLogin();
+
+        if (cpfExiste(cpf)) {
+            JOptionPane.showMessageDialog(null, "CPF já cadastrado.", "Erro", JOptionPane.ERROR_MESSAGE);
+            telaCadastroCliente.mostrarTela();
+        } else if (loginExiste(login)) {
+            JOptionPane.showMessageDialog(null, "Login já cadastrado.", "Erro", JOptionPane.ERROR_MESSAGE);
+            telaCadastroCliente.mostrarTela();
+        } else {
+            if (!cpfValido(cpf)) {
+                JOptionPane.showMessageDialog(null, "Formato de CPF inválido. Escreva sem caracteres especiais.", "Erro", JOptionPane.ERROR_MESSAGE);
+                telaCadastroCliente.mostrarTela();
+            } else {
+                listaClientes.add(novoCliente);
+                salvarClientesNoCSV(listaClientes);
+            }
+        }
+    }
+
+    public void salvarClientesNoCSV(List<Cliente> clientes) {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("clientes.csv"));
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
+            for (Cliente cliente : clientes) {
+                String dataVendaStr = dateFormat.format(cliente.getUltimaCompra());
+
+                String linha = cliente.getNome() + "," + cliente.getCpf() + ","
+                        + cliente.getLogin() + "," + cliente.getSenha() + "," + dataVendaStr;
+
+                writer.write(linha);
+                writer.newLine();
+            }
+            
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public Cliente encontrarClientePorCPF(String cpf) throws ParseException {
@@ -95,12 +160,12 @@ public class ClienteRepository {
         return clienteEncontrado;
     }
 
-    public void salvarClientesNoCSV(List<Cliente> clientes) {
+    public void atualizarClientesNoCSV(List<Cliente> clienteParaAtualizar) {
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("clientes.csv",true));
+            BufferedWriter writer = new BufferedWriter(new FileWriter("clientes.csv"));
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
-            for (Cliente cliente : clientes) {
+            for (Cliente cliente : clienteParaAtualizar) {
                 String dataVendaStr = dateFormat.format(cliente.getUltimaCompra());
 
                 writer.write(cliente.getNome() + "," + cliente.getCpf() + ","
@@ -112,35 +177,15 @@ public class ClienteRepository {
             e.printStackTrace();
         }
     }
-public void atualizarClientesNoCSV(List<Cliente> clienteParaAtualizar) {
-    try {
-        BufferedWriter writer = new BufferedWriter(new FileWriter("clientes.csv")); 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-
-        for (Cliente cliente : clienteParaAtualizar) {
-            String dataVendaStr = dateFormat.format(cliente.getUltimaCompra());
-
-            writer.write(cliente.getNome() + "," + cliente.getCpf() + ","
-                    + cliente.getLogin() + "," + cliente.getSenha() + "," + dataVendaStr);
-            writer.newLine();
-        }
-        writer.close();
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-}
 
     public void atualizarDadosDoCliente(Cliente clienteParaAtualizar, String campoNome, String campoCpf, String campoLogin, String campoSenha) {
-        
         clienteParaAtualizar.setNome(campoNome);
         clienteParaAtualizar.setCpf(campoCpf);
         clienteParaAtualizar.setLogin(campoLogin);
         clienteParaAtualizar.setSenha(campoSenha);
 
-        
         List<Cliente> todosClientes = obterTodosClientes();
 
-       
         int indiceAtualizado = -1;
         for (int i = 0; i < todosClientes.size(); i++) {
             if (todosClientes.get(i).getCpf().equals(clienteParaAtualizar.getCpf())) {
@@ -150,7 +195,6 @@ public void atualizarClientesNoCSV(List<Cliente> clienteParaAtualizar) {
         }
 
         if (indiceAtualizado != -1) {
-            
             todosClientes.set(indiceAtualizado, clienteParaAtualizar);
 
             File arquivoCSV = new File("clientes.csv");
@@ -158,7 +202,7 @@ public void atualizarClientesNoCSV(List<Cliente> clienteParaAtualizar) {
 
             atualizarClientesNoCSV(todosClientes);
         } else {
-            System.out.println("Cliente não encontrado.");
+            JOptionPane.showMessageDialog(null, "Não é possível alterar o CPF.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

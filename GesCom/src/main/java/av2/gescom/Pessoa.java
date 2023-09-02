@@ -8,9 +8,6 @@ package av2.gescom;
  *
  * @author Marina
  */
-import java.util.ArrayList;
-import java.util.List;
-
 public class Pessoa {
     private String nome;
     private String cpf;

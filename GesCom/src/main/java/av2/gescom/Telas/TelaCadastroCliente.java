@@ -17,18 +17,20 @@ import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 public class TelaCadastroCliente {
     private ClienteRepository clienteRepository;
+    private JFrame telaCadastro;
 
     public TelaCadastroCliente(ClienteRepository clienteRepository) {
         this.clienteRepository = clienteRepository;
+        this.telaCadastro = new JFrame("Cadastrar Cliente");
     }
 
     public void mostrarTela() {
-        JFrame telaCadastro = new JFrame("Cadastrar Cliente");
+        telaCadastro = new JFrame("Cadastrar Cliente");
+        
         telaCadastro.setSize(400, 300);
         telaCadastro.setLayout(new GridLayout(6, 2));
 
@@ -44,7 +46,7 @@ public class TelaCadastroCliente {
         JLabel labelSenha = new JLabel("Senha:");
         JPasswordField campoSenha = new JPasswordField();
 
-        JLabel labelUltimaCompra = new JLabel("Última Compra (dd.MM.yyyy):");
+        JLabel labelUltimaCompra = new JLabel("Data do cadastro (dd.MM.yyyy):");
         JTextField campoUltimaCompra = new JTextField();
 
         JButton botaoCadastrar = new JButton("Cadastrar");
@@ -62,18 +64,17 @@ public class TelaCadastroCliente {
                 try {
                     dataVenda = dateFormat.parse(dataVendaStr);
                 } catch (ParseException ex) {
-                    Logger.getLogger(TelaCadastroCliente.class.getName()).log(Level.SEVERE, null, ex);
-                    JOptionPane.showMessageDialog(null, "Formato de data inválido. Use o formato dd.MM.yyyy.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    ex.printStackTrace();
+                    exibirErro("Formato de data inválido. Use o formato dd.MM.yyyy.");
                     return;
                 }
 
-                // Criar um novo cliente
                 Cliente novoCliente = new Cliente(nome, cpf, login, senha, dataVenda);
 
-                // Adicionar o cliente ao repositório
                 clienteRepository.cadastrarCliente(novoCliente);
 
-                // Fechar a tela de cadastro
+                JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+
                 telaCadastro.dispose();
             }
         });
@@ -89,7 +90,15 @@ public class TelaCadastroCliente {
         telaCadastro.add(labelUltimaCompra);
         telaCadastro.add(campoUltimaCompra);
         telaCadastro.add(botaoCadastrar);
-
+        
         telaCadastro.setVisible(true);
     }
+
+
+    private void exibirErro(String mensagem) {
+        JOptionPane.showMessageDialog(null, mensagem, "Erro", JOptionPane.ERROR_MESSAGE);
+        mostrarTela(); 
+    }
 }
+
+
