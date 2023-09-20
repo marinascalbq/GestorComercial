@@ -11,4 +11,5 @@
         <maven.compiler.target>20</maven.compiler.target>
         <exec.mainClass>av2.gescom.GesCom</exec.mainClass>
     </properties>
+    <name>GesCom1.0</name>
 </project>

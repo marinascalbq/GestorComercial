@@ -18,8 +18,12 @@ public class Cliente extends Pessoa {
         this.ultimaCompra = ultimaCompra;
     }
    
-    public Date getUltimaCompra() {
+    public Date getultimaCompra() {
         return ultimaCompra;
+    }
+
+    public String getdataVenda() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
 }

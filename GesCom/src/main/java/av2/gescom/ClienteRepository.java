@@ -4,7 +4,7 @@
  */
 package av2.gescom;
 
-import av2.gescom.Telas.TelaCadastroCliente;
+import gescom.TelasClientes.TelaCadastroCliente;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -110,7 +110,7 @@ public class ClienteRepository {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
             for (Cliente cliente : clientes) {
-                String dataVendaStr = dateFormat.format(cliente.getUltimaCompra());
+                String dataVendaStr = dateFormat.format(cliente.getultimaCompra());
 
                 String linha = cliente.getNome() + "," + cliente.getCpf() + ","
                         + cliente.getLogin() + "," + cliente.getSenha() + "," + dataVendaStr;
@@ -166,7 +166,7 @@ public class ClienteRepository {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 
             for (Cliente cliente : clienteParaAtualizar) {
-                String dataVendaStr = dateFormat.format(cliente.getUltimaCompra());
+                String dataVendaStr = dateFormat.format(cliente.getultimaCompra());
 
                 writer.write(cliente.getNome() + "," + cliente.getCpf() + ","
                         + cliente.getLogin() + "," + cliente.getSenha() + "," + dataVendaStr);

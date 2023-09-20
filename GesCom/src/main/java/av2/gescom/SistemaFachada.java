@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -20,7 +21,7 @@ import javax.swing.JTextField;
 /**
  *
  * @author Marina
-
+*/
 public class SistemaFachada {
     
     private List<Cliente> listaClientes; 
@@ -29,16 +30,16 @@ public class SistemaFachada {
     private ProdutoRepository produtoRepository;
     private VendaRepository vendaRepository;
 
-    private SistemaFachada() {
+    private SistemaFachada() throws ParseException {
         clienteRepository = new ClienteRepository();
         produtoRepository = new ProdutoRepository();
         vendaRepository = new VendaRepository();
     }
 
-    public static SistemaFachada getInstance() {
+    public static SistemaFachada getInstance() throws ParseException {
         if (instance == null) {
             instance = new SistemaFachada();
         }
         return instance;
     }
-} */
+}

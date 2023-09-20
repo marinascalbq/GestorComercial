@@ -10,13 +10,7 @@ package av2.gescom;
  */
 
 
-import av2.gescom.Telas.TelaAtualizarClientes;
-import av2.gescom.Telas.TelaCadastroCliente;
-import av2.gescom.Telas.TelaEfetuarCompra;
-import av2.gescom.Telas.TelaMostrarComprasEfetuadas;
-import av2.gescom.Telas.TelaMostrarEstoque;
-import av2.gescom.Telas.TelaRegistrarProdutos;
-import av2.gescom.Telas.TelaVisualizarClientes;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -24,6 +18,10 @@ import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import gescom.TelasClientes.TelaMenuCliente;
+import gescom.TelasCompras.TelaMenuCompra;
+import gescom.TelasProdutos.TelaMenuEstoque;
+
 
 public class MenuGUI extends JFrame {
 
@@ -44,7 +42,7 @@ public class MenuGUI extends JFrame {
         return instance;
     }
 
-    private MenuGUI(ClienteRepository clienteRepository, ProdutoRepository produtoRepository,
+    public MenuGUI(ClienteRepository clienteRepository, ProdutoRepository produtoRepository,
                     VendaRepository vendaRepository, Estoque estoque) {
         this.clienteRepository = clienteRepository;
         this.produtoRepository = produtoRepository;
@@ -55,120 +53,69 @@ public class MenuGUI extends JFrame {
     }
 
     private void createMenu() {
-        
-    TelaCadastroCliente telaCadastroCliente = new TelaCadastroCliente(clienteRepository);
-    TelaEfetuarCompra telaEfetuarCompra = new TelaEfetuarCompra(clienteRepository, produtoRepository, vendaRepository, estoque);
-    TelaMostrarComprasEfetuadas telaMostrarComprasEfetuadas = new TelaMostrarComprasEfetuadas(vendaRepository);
-    TelaMostrarEstoque telaMostrarEstoque = new TelaMostrarEstoque(estoque);
-    TelaRegistrarProdutos telaRegistrarProdutos = new TelaRegistrarProdutos(produtoRepository,listaProdutos);
-    TelaVisualizarClientes telaVisualizarClientes = new TelaVisualizarClientes(clienteRepository);
-    TelaAtualizarClientes telaAtualizarClientes = new TelaAtualizarClientes(clienteRepository);
-
-        
-        
+        TelaMenuCliente telaCliente = new TelaMenuCliente(clienteRepository);
+        TelaMenuCompra telaMenuCompra = new TelaMenuCompra(vendaRepository,clienteRepository,produtoRepository,estoque);
+        TelaMenuEstoque telaMenuEstoque = new TelaMenuEstoque(produtoRepository,estoque);
         setTitle("Menu Principal");
         setSize(600, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridBagLayout());
-
+        getContentPane().setBackground(Color.PINK); 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(10, 10, 10, 10);
-
-        JButton cadastrarClienteButton = new JButton("Cadastrar Cliente");
-        JButton atualizarClienteButton = new JButton("Atualizar Cliente");
-        JButton visualizarClientesButton = new JButton("Visualizar Clientes");
-        JButton efetuarCompraButton = new JButton("Efetuar Compra");
-        JButton mostrarComprasButton = new JButton("Mostrar Compras Efetuadas");
-        JButton registrarProdutoButton = new JButton("Registrar Novos Produtos");
-        JButton mostrarEstoqueButton = new JButton("Estoque");
-
+        
+        JLabel TituloLabel = new JLabel("GesCom");
+        JLabel SubTituloLabel = new JLabel("Uma boa gestão para seu negócio");
+        JButton ClienteButton = new JButton("    CLIENTES    ");
+        JButton ComprasButton = new JButton("    COMPRAS    ");
+        JButton EstoqueButton = new JButton("    ESTOQUE    ");
+        
+        Font fonteMaior = TituloLabel.getFont().deriveFont(Font.BOLD, 60);
+        TituloLabel.setFont(fonteMaior);
         constraints.gridx = 0;
         constraints.gridy = 0;
-        add(cadastrarClienteButton, constraints);
-
+        add(TituloLabel, constraints);
+        
         constraints.gridx = 0;
         constraints.gridy = 1;
-        add(atualizarClienteButton, constraints);
+        add(SubTituloLabel, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 2;
-        add(visualizarClientesButton, constraints);
+        add(ClienteButton, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 3;
-        add(efetuarCompraButton, constraints);
+        add(ComprasButton, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 4;
-        add(mostrarComprasButton, constraints);
+        add(EstoqueButton, constraints);
 
-        constraints.gridx = 0;
-        constraints.gridy = 5;
-        add(registrarProdutoButton, constraints);
-
-        constraints.gridx = 0;
-        constraints.gridy = 6;
-        add(mostrarEstoqueButton, constraints);
-       
-
-        cadastrarClienteButton.addActionListener(new ActionListener() {
+        ClienteButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
-                telaCadastroCliente.mostrarTela();
+                // Mostra a telaCliente quando o botão é clicado
+                telaCliente.mostrarTela();
             }
         });
-
-        efetuarCompraButton.addActionListener(new ActionListener() {
+        ComprasButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
-                telaEfetuarCompra.mostrarTela();
+                // Mostra a telaCliente quando o botão é clicado
+                telaMenuCompra.mostrarTela();
             }
         });
-
-        mostrarComprasButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                telaMostrarComprasEfetuadas.mostrarTela();
-            }
-        });
-
-        mostrarEstoqueButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                telaMostrarEstoque.mostrarTela();
-            }
-        });
-
-        registrarProdutoButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                telaRegistrarProdutos.mostrarTela();
-            }
-        });
-
-        visualizarClientesButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                telaVisualizarClientes.mostrarTela();
-            }
-        });
-        
-        atualizarClienteButton.addActionListener(new ActionListener() {
+        EstoqueButton.addActionListener(new ActionListener() {
+        @Override
         public void actionPerformed(ActionEvent e) {
-            // Solicita ao usuário o CPF do cliente a ser atualizado
-            String cpfCliente = JOptionPane.showInputDialog(null, "Digite o CPF do cliente a ser atualizado:");
+         // Mostra a telaEstoque quando o botão é clicado
+            telaMenuEstoque.mostrarTela();
+    }
+});
 
-            // Obtém o cliente pelo CPF do clienteRepository
-            Cliente clienteParaAtualizar = null;
-            try {
-                clienteParaAtualizar = clienteRepository.encontrarClientePorCPF(cpfCliente);
-            } catch (ParseException ex) {
-                Logger.getLogger(MenuGUI.class.getName()).log(Level.SEVERE, null, ex);
-            }
 
-            if (clienteParaAtualizar != null) {
-                // Cria uma instância do TelaAtualizarClientes e mostra a tela
-                TelaAtualizarClientes telaAtualizarClientes = new TelaAtualizarClientes(clienteRepository);
-                telaAtualizarClientes.mostrarTela(clienteParaAtualizar);
-            } else {
-                JOptionPane.showMessageDialog(null, "Cliente não encontrado.");
-            }
-        }
-    });
+        // Resto do seu código...
 
         setLocationRelativeTo(null);
         setVisible(true);
